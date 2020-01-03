@@ -81,10 +81,19 @@ move: function(){
 }
 
 const apple = {
-pos: [],
+pos: [13,15],
 color: 'red',
 create: function(){
-
+let check = true;
+    while(check){
+        this.pos[0]= playground.rand(20);
+        this.pos[1] = playground.rand(20);
+        for(let i=0;i<snake.tail.length;i++){
+            if(snake.tail[i][0]!=this.pos[0] && snake.tail[i][1]!=this.pos[1]){
+                check = false;
+            }
+        }
+    }
 },
 }
 
