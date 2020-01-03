@@ -22,35 +22,70 @@ const playground = {
         dirX = x2 - x1;
         dirY = y2 - y1;
         if(Math.abs(dirX) > Math.abs(dirY)){
-            if(dirX>0 && snake.direction != 'left'){
-                snake.direction = 'right';
+            if(dirX>0 && snake.direction != 'l'){
+                snake.direction = 'r';
             } 
-            else if(snake.direction != 'right'){
-                snake.direction = 'left';
+            else if(snake.direction != 'r'){
+                snake.direction = 'l';
             }
         } 
         else{
-            if(dirY>0 && snake.direction != 'up'){
-                snake.direction = 'down';
+            if(dirY>0 && snake.direction != 'u'){
+                snake.direction = 'd';
             }
-            else if(snake.direction != 'down'){
-                snake.direction = 'up';
+            else if(snake.direction != 'd'){
+                snake.direction = 'u';
             }
         }
-        console.log(snake.direction);
+    },
+    update: function(){
+        //apple.draw();
+        //snake.draw();
     },
 }
 
 const snake = {
 tail:[[13,15], [12,15], [11,15], [10,15]],
 color:'lime',
-speed:5,
-direction:'right',
+speed:0.5,
+direction:'r',
+move: function(){
+    let x,y;
+    switch (this.direction){
+        case 'r':
+            x = this.tail[0][0]+1;
+            y = this.tail[0][1];
+            this.tail.unshift([x,y]);
+            this.tail.pop();
+            break;
+        case 'l':
+            x = this.tail[0][0]-1;
+            y = this.tail[0][1];
+            this.tail.unshift([x,y]);
+            this.tail.pop();
+            break;
+        case 'u':
+            x = this.tail[0][0];
+            y = this.tail[0][1]-1;
+            this.tail.unshift([x,y]);
+            this.tail.pop();
+            break;
+        case 'd':
+            x = this.tail[0][0];
+            y = this.tail[0][1]+1;
+            this.tail.unshift([x,y]);
+            this.tail.pop();
+            break;
+    }
+},
 }
 
 const apple = {
-pos: [,],
+pos: [],
 color: 'red',
+create: function(){
+
+},
 }
 
 var canvas = document.getElementById("gameCanvas"),
@@ -61,18 +96,16 @@ playground.resizeCanvas();
 //action !!!
 
 function gameLogick(){
-    //apple.create();
+    apple.create();
     window.onmousedown = function(event){
         playground.saveMouseDownPos(event.clientX, event.clientY);
     }
-    let timerId = setTimeout(function tick() {
-        update();
-        timerId = setTimeout(tick, 1000/playground.fps); // (*)
-      }, 1000,playground.fps);
+    let updateId = setInterval(function tick() {
+        playground.update();
+      }, 1000/playground.fps);
+
+      let snakeMoveId = setInterval(function tick() {
+        snake.move();
+      }, 1000/snake.speed);
 }
 gameLogick();
-
-function update(){
-    //apple.draw();
-    //snake.draw();
-}
