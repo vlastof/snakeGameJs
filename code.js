@@ -50,7 +50,7 @@ const playground = {
 const snake = {
 tail:[[13,15], [12,15], [11,15], [10,15]],
 color:'lime',
-speed:4,
+speed:3,
 scale:1,
 direction:'r',
 move: function(){
@@ -85,6 +85,22 @@ move: function(){
             this.tail.pop();
             break;
     }
+    this.checkDie();
+},
+checkDie: function(){
+    for(let i = 0;i<this.tail.length;i++){
+        for(let j = 0;j<this.tail.length;j++){
+            if(this.tail[i][0] === this.tail[j][0] && this.tail[i][1] === this.tail[j][1] && i!=j){
+                this.die();
+            }
+        }
+    }
+},
+die: function(){
+    this.speed = 3;
+    this.tail = [[13,15], [12,15], [11,15], [10,15]];
+    this.direction = 'r';
+    apple.create();
 },
 draw: function(){
     for(let i=0;i<this.tail.length;i++){
