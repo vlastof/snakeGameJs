@@ -81,17 +81,16 @@ move: function(){
             if(this.tail[0][1] === 20){this.tail[0][1] = 0};
             break;
     }
-    this.checkDie();
     if(this.isEating()){
         apple.create();
-        this.speed+=0.1;
+        this.speed+=0.000005;
         clearTimeout(snakeMoveId);
-        setTimeout(this.callSnakeTimer(),1000/this.speed);
+        setTimeout(this.callSnakeTimer(),1000/Math.floor(this.speed));
     }
     else{
         this.tail.pop();
-       
     }
+    this.checkDie();
 },
 checkDie: function(){
     for(let i = 0;i<this.tail.length;i++){
@@ -111,7 +110,7 @@ die: function(){
         setTimeout(this.callSnakeTimer(),1000/this.speed);
 },
 isEating: function(){
-    return (this.tail[0][0] == apple.pos[0] && this.tail[0][1] == apple.pos[1]);
+    return ((this.tail[0][0] == apple.pos[0] && this.tail[0][1] == apple.pos[1]) || this.tail[1][0] == apple.pos[0] && (this.tail[1][1] == apple.pos[1]));
 },
 draw: function(){
     for(let i=0;i<this.tail.length;i++){
@@ -121,7 +120,7 @@ draw: function(){
 callSnakeTimer: function(){
     snakeMoveId = setInterval(function tick() {
         snake.move();
-      }, 1000/snake.speed);
+      }, 1000/Math.floor(snake.speed));
   }
 }
 
