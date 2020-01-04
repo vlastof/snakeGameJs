@@ -60,24 +60,28 @@ move: function(){
             x = this.tail[0][0]+1;
             y = this.tail[0][1];
             this.tail.unshift([x,y]);
+            if(this.tail[0][0] === 20){this.tail[0][0] = 0};
             this.tail.pop();
             break;
         case 'l':
             x = this.tail[0][0]-1;
             y = this.tail[0][1];
             this.tail.unshift([x,y]);
+            if(this.tail[0][0] === -1){this.tail[0][0] = 19};
             this.tail.pop();
             break;
         case 'u':
             x = this.tail[0][0];
             y = this.tail[0][1]-1;
             this.tail.unshift([x,y]);
+            if(this.tail[0][1] === -1){this.tail[0][1] = 19};
             this.tail.pop();
             break;
         case 'd':
             x = this.tail[0][0];
             y = this.tail[0][1]+1;
             this.tail.unshift([x,y]);
+            if(this.tail[0][1] === 20){this.tail[0][1] = 0};
             this.tail.pop();
             break;
     }
