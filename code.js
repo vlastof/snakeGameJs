@@ -50,7 +50,7 @@ const playground = {
 const snake = {
 tail:[[13,15], [12,15], [11,15], [10,15]],
 color:'lime',
-speed:3,
+speed:7,
 scale:1,
 direction:'r',
 move: function(){
@@ -61,31 +61,37 @@ move: function(){
             y = this.tail[0][1];
             this.tail.unshift([x,y]);
             if(this.tail[0][0] === 20){this.tail[0][0] = 0};
-            this.tail.pop();
             break;
         case 'l':
             x = this.tail[0][0]-1;
             y = this.tail[0][1];
             this.tail.unshift([x,y]);
             if(this.tail[0][0] === -1){this.tail[0][0] = 19};
-            this.tail.pop();
             break;
         case 'u':
             x = this.tail[0][0];
             y = this.tail[0][1]-1;
             this.tail.unshift([x,y]);
             if(this.tail[0][1] === -1){this.tail[0][1] = 19};
-            this.tail.pop();
             break;
         case 'd':
             x = this.tail[0][0];
             y = this.tail[0][1]+1;
             this.tail.unshift([x,y]);
             if(this.tail[0][1] === 20){this.tail[0][1] = 0};
-            this.tail.pop();
             break;
     }
     this.checkDie();
+    if(this.isEating()){
+        apple.create();
+        this.speed+=0.1;
+        clearTimeout(snakeMoveId);
+        setTimeout(this.callSnakeTimer(),1000/this.speed);
+    }
+    else{
+        this.tail.pop();
+       
+    }
 },
 checkDie: function(){
     for(let i = 0;i<this.tail.length;i++){
@@ -97,16 +103,26 @@ checkDie: function(){
     }
 },
 die: function(){
-    this.speed = 3;
+    this.speed = 7;
     this.tail = [[13,15], [12,15], [11,15], [10,15]];
     this.direction = 'r';
     apple.create();
+    clearTimeout(snakeMoveId);
+        setTimeout(this.callSnakeTimer(),1000/this.speed);
+},
+isEating: function(){
+    return (this.tail[0][0] == apple.pos[0] && this.tail[0][1] == apple.pos[1]);
 },
 draw: function(){
     for(let i=0;i<this.tail.length;i++){
         playground.drawSquare(this.tail[i][0],this.tail[i][1],this.scale, this.color);
     }
 },
+callSnakeTimer: function(){
+    snakeMoveId = setInterval(function tick() {
+        snake.move();
+      }, 1000/snake.speed);
+  }
 }
 
 const apple = {
@@ -139,13 +155,13 @@ draw: function(){
 }
 
 var canvas = document.getElementById("gameCanvas"),
-ctx = canvas.getContext('2d');
+ctx = canvas.getContext('2d'),
+snakeMoveId;
 playground.resizeCanvas();
 playground.unitSize = canvas.width/20;
 //action !!!
 
 function gameLogick(){
-    apple.create();
     window.onmousedown = function(event){
         playground.saveMouseDownPos(event.clientX, event.clientY);
     }
@@ -153,8 +169,8 @@ function gameLogick(){
         playground.update();
       }, 1000/playground.fps);
 
-      let snakeMoveId = setInterval(function tick() {
-        snake.move();
-      }, 1000/snake.speed);
+
+      apple.create();
+      snake.callSnakeTimer();
 }
 gameLogick();
