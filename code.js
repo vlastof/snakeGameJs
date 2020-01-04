@@ -1,13 +1,15 @@
 const playground = {
     fps: 60,
+    unitSize: 0,
     resizeCanvas: function(){
         let ww = window.innerWidth;
         let wh = window.innerHeight;
         canvas.width = ww > wh ? wh : ww;
         canvas.height = ww > wh ? wh : ww;
     },
-    drawSquare: function(){
-
+    drawSquare: function(x, y, scale, color){
+        ctx.fillStyle = color;
+        ctx.fillRect((x*playground.unitSize)+scale, (y*playground.unitSize)+scale, playground.unitSize-(scale*2), playground.unitSize-(scale*2)); 
     },
     rand: function(max){
         return(Math.floor(Math.random()*(max+1)));
@@ -39,15 +41,17 @@ const playground = {
         }
     },
     update: function(){
-        //apple.draw();
-        //snake.draw();
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        apple.draw();
+        snake.draw();
     },
 }
 
 const snake = {
 tail:[[13,15], [12,15], [11,15], [10,15]],
 color:'lime',
-speed:0.5,
+speed:4,
+scale:1,
 direction:'r',
 move: function(){
     let x,y;
@@ -78,16 +82,26 @@ move: function(){
             break;
     }
 },
+draw: function(){
+    for(let i=0;i<this.tail.length;i++){
+        playground.drawSquare(this.tail[i][0],this.tail[i][1],this.scale, this.color);
+    }
+},
 }
 
 const apple = {
 pos: [13,15],
+scaleSpeed: 0.06,
+scaleMax:1,
+scaleMin:2,
+lowering:true,
+scale:1,
 color: 'red',
 create: function(){
-let check = true;
+    let check = true;
     while(check){
-        this.pos[0]= playground.rand(20);
-        this.pos[1] = playground.rand(20);
+        this.pos[0]= playground.rand(19);
+        this.pos[1] = playground.rand(19);
         for(let i=0;i<snake.tail.length;i++){
             if(snake.tail[i][0]!=this.pos[0] && snake.tail[i][1]!=this.pos[1]){
                 check = false;
@@ -95,13 +109,19 @@ let check = true;
         }
     }
 },
+draw: function(){
+    if(this.lowering){this.scale+=this.scaleSpeed;}
+    else{this.scale-=this.scaleSpeed;}
+    playground.drawSquare(this.pos[0],this.pos[1],this.scale,this.color);
+    if(this.scale<=this.scaleMax){this.lowering=true}
+    if(this.scale>=this.scaleMin){this.lowering=false}
+},
 }
 
 var canvas = document.getElementById("gameCanvas"),
 ctx = canvas.getContext('2d');
-ctx.fillRect(0, 0, canvas.width, canvas.height);
 playground.resizeCanvas();
-
+playground.unitSize = canvas.width/20;
 //action !!!
 
 function gameLogick(){
