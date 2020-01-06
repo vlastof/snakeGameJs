@@ -102,12 +102,13 @@ const snake = {
   },
 
   checkDie() {
-    for (let j = 1; j < this.tail.length; j += 1) {
-      if (this.tail[0][0] === this.tail[j][0]
-            && this.tail[0][1] === this.tail[j][1]) {
-        this.die();
+    const [[x, y]] = this.tail;
+
+    this.tail.forEach(([ currentX, currentY ], index) => {
+      if (index > 1 && x === currentX && y === currentY) {
+          this.die()
       }
-    }
+    });
   },
 
   die() {
