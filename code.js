@@ -128,12 +128,12 @@ const snake = {
   },
 
   draw() {
-    for (let i = 0; i < this.tail.length; i += 1) {
-      playground.drawSquare(this.tail[i][0],
-        this.tail[i][1],
-        this.scale,
-        this.color);
-    }
+    this.tail.forEach( ([x, y]) => {
+      playground.drawSquare(x, 
+                            y, 
+                            this.scale, 
+                            this.color);
+    });
   },
 
   callSnakeTimer() {
@@ -154,12 +154,12 @@ const apple = {
   create() {
     this.pos[0] = playground.rand(UNITS - 1);
     this.pos[1] = playground.rand(UNITS - 1);
-    for (let i = 0; i < snake.tail.length; i += 1) {
-      if (snake.tail[i][0] === this.pos[0]
-            && snake.tail[i][1] === this.pos[1]) {
+    let [appleX, appleY] = this.pos;
+    snake.tail.forEach(([x,y]) => {
+      if(x === appleX && y === appleY) {
         this.create();
       }
-    }
+    });
   },
 
   draw() {
