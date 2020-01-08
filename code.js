@@ -1,3 +1,4 @@
+//Можно улучишть свайпы.
 const FPS = 60;
 // Grid game metrics system. Grid is UNITS * X, UNITS * Y;
 const UNITS = 20;
